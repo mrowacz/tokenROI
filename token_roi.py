@@ -27,7 +27,7 @@ if __name__ == "__main__":
     for token in tokens:
         key_str = "ETH_" + token
 
-        if not key_str in idex_tickers:
+        if not key_str in idex_tickers or str(idex_tickers[key_str]['last']) == 'N/A':
             continue
 
         ico_price = "{0:.8f}".format(float(tokens[token]))
