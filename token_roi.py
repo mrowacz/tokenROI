@@ -1,6 +1,6 @@
-import os
 import json
 import requests
+from termcolor import colored
 
 if __name__ == "__main__":
 
@@ -16,16 +16,26 @@ if __name__ == "__main__":
     assert r.status_code == 200
     idex_tickers = json.loads(r.text)
 
+    HEADER_TEXT = '\x1b[0;30;46m'
+    GREEN_TEXT = '\x1b[6;30;42m'
+    RED_TEXT = '\x1b[1;37;40m'
+    END_SIGN = '\x1b[0m'
+
     header_format = "{:<10} {:<14} {:<14} {:<5}"
-    print(header_format.format("TOKEN", "ICO PRICE", "LAST", "ROI"))
+    print(HEADER_TEXT + header_format.format("TOKEN", "ICO PRICE", "LAST", "ROI") + END_SIGN)
 
     for token in tokens:
         key_str = "ETH_" + token
 
         if not key_str in idex_tickers:
             continue
-            
+
         ico_price = "{0:.8f}".format(float(tokens[token]))
         last_price = "{0:.8f}".format(float(idex_tickers[key_str]['last']))
-        roi = "{0:.2f}%".format(100 * (float(last_price) - tokens[token])/tokens[token])
-        print(header_format.format(token, ico_price, last_price, roi))
+        roi_float = 100 * (float(last_price) - tokens[token])/tokens[token]
+        roi = "{0:.2f}%".format(roi_float)
+
+        if roi_float > 100:
+            print(GREEN_TEXT + header_format.format(token, ico_price, last_price, roi) + END_SIGN)
+        else:
+            print(RED_TEXT + header_format.format(token, ico_price, last_price, roi) + END_SIGN)
