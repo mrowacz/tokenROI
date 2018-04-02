@@ -7,11 +7,14 @@ from token_roi.cmd import TokenArguments
 
 def handle_tokens():
     tokens = {}
-    with open("token_list.txt") as f:
+    with open(TokenArguments.get_config_path()) as f:
         conf_list = list(map(lambda x: x.rstrip(), f.readlines()))
         for c in conf_list:
-            token, price = c.split(" ")
-            tokens[token] = float(price)
+            token, price, amount = c.split(" ")
+            tokens[token] = {
+                'price': float(price),
+                'amount': float(amount)
+            }
 
     r = requests.post('https://api.idex.market/returnTicker')
 
