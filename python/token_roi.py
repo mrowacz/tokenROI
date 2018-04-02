@@ -31,7 +31,7 @@ def handle_tokens():
         "TOKEN", "ICO PRICE", "LAST", "ROI", "TOTAL"
     ) + END_SIGN)
 
-    for token in tokens:
+    for token in sorted(tokens):
         key_str = "ETH_" + token
 
         if not key_str in idex_tickers or str(
