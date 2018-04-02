@@ -23,9 +23,9 @@ def handle_tokens():
     RED_TEXT = '\x1b[1;37;40m'
     END_SIGN = '\x1b[0m'
 
-    header_format = "{:<10} {:<14} {:<14} {:<5}"
+    header_format = "{:<10} {:<14} {:<14} {:<14} {:<14}"
     print(HEADER_TEXT + header_format.format(
-        "TOKEN", "ICO PRICE", "LAST", "ROI"
+        "TOKEN", "ICO PRICE", "LAST", "ROI", "TOTAL"
     ) + END_SIGN)
 
     for token in tokens:
@@ -35,18 +35,23 @@ def handle_tokens():
                 idex_tickers[key_str]['last']) == 'N/A':
             continue
 
-        ico_price = "{0:.8f}".format(float(tokens[token]))
+        t_price = tokens[token]['price']
+        t_amount = tokens[token]['amount']
+        ico_price = "{0:.8f}".format(float(t_price))
         last_price = "{0:.8f}".format(float(idex_tickers[key_str]['last']))
-        roi_float = 100 * (float(last_price) - tokens[token]) / tokens[token]
+        total_eth = "{0:.8f}".format(t_amount * float(last_price))
+        roi_float = 100 * (float(last_price) - t_price) / t_price
         roi = "{0:.2f}%".format(roi_float)
 
         if roi_float > 100:
             print(
                 GREEN_TEXT + header_format.format(token, ico_price, last_price,
-                                                  roi) + END_SIGN)
+                                                  roi, total_eth)
+                + END_SIGN)
         else:
             print(RED_TEXT + header_format.format(token, ico_price, last_price,
-                                                  roi) + END_SIGN)
+                                                  roi, total_eth)
+                  + END_SIGN)
 
 
 if __name__ == "__main__":
