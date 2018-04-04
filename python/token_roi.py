@@ -2,10 +2,12 @@ import json
 import requests
 import sys
 import logging
-from token_roi.cmd import TokenArguments
+from token_roi.tokens import TokenArguments
+from token_roi.wallets import WalletArguments
 
 
 def handle_tokens():
+    out = []
     tokens = {}
     with open(TokenArguments.get_config_path()) as f:
         conf_list = list(map(lambda x: x.rstrip(), f.readlines()))
@@ -43,6 +45,7 @@ def handle_tokens():
         ico_price = "{0:.8f}".format(float(t_price))
         last_price = "{0:.8f}".format(float(idex_tickers[key_str]['last']))
         total_eth = "{0:.8f}".format(t_amount * float(last_price))
+        out.append(float(total_eth))
         roi_float = 100 * (float(last_price) - t_price) / t_price
         roi = "{0:.2f}%".format(roi_float)
 
@@ -55,6 +58,25 @@ def handle_tokens():
             print(RED_TEXT + header_format.format(token, ico_price, last_price,
                                                   roi, total_eth)
                   + END_SIGN)
+    return out
+
+
+def handle_wallets():
+    out = []
+    with open(WalletArguments.get_config_path()) as f:
+        wei = 1e-18
+        data = f.readlines()
+        url = "https://api.etherscan.io/api?module=account&action=balance" \
+              "&address={}&tag=latest"
+        for addr in list(map(lambda x: x.rstrip(), data)):
+            r = requests.get(url.format(addr))
+            if r.status_code == 200:
+                js_r = json.loads(r.text)
+                if js_r['message'] == 'OK':
+                    print('{0:}: {1:.4f}'.
+                          format(addr, float(js_r['result'])*wei))
+                    out.append(float(js_r['result'])*wei)
+    return out
 
 
 if __name__ == "__main__":
@@ -68,4 +90,7 @@ if __name__ == "__main__":
     elif parameters['upload']:
         TokenArguments.handle_upload()
     else:
-        handle_tokens()
+        sum_eth = 0
+        sum_eth += sum(handle_tokens())
+        sum_eth += sum(handle_wallets())
+        print("eth sum: {0:.2f}".format(sum_eth))
