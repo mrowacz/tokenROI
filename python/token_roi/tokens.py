@@ -21,7 +21,9 @@ class TokenArguments:
             "init": False,
             "upload": False,
             "fetch": False,
-            "all": False
+            "all": False,
+            "edit": False
+
         }
         help_string = """
 How to use:
@@ -30,8 +32,8 @@ How to use:
 --all show all data even eth balances
 """
         try:
-            opts, args = getopt.getopt(argv, "hi:u:f:d:a:",
-                                ["init", "upload", 'fetch', 'debug', 'all'])
+            opts, args = getopt.getopt(argv, "hi:u:f:d:a:e:",
+                ["init", "upload", 'fetch', 'debug', 'all', 'edit'])
         except getopt.GetoptError:
             print(help_string)
             sys.exit(2)
@@ -49,6 +51,8 @@ How to use:
                 out['debug'] = True
             elif opt in ("-a", "--all"):
                 out['all'] = True
+            elif opt in ("-e", "--edit"):
+                out['edit'] = True
         return out
 
     @staticmethod
@@ -85,11 +89,6 @@ How to use:
         file_list = drive.ListFile(
             {'q': "'root' in parents and trashed=false"}).GetList()
         file_list = list(filter(lambda x: x['title'] == 'token_list.txt',
-                             file_list))
-
-        # with open(TokenArguments.get_config_path(), 'r') as f:
-        #     data = ''
-        #     for s in f.readlines():
-        #         data += s
+                                file_list))
         file_list[0].SetContentFile(TokenArguments.get_config_path())
         file_list[0].Upload()

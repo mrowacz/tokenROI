@@ -1,6 +1,6 @@
 import json
 import os
-
+import editor
 import requests
 import sys
 import logging
@@ -93,6 +93,8 @@ if __name__ == "__main__":
         TokenArguments.handle_init()
     elif parameters['upload']:
         TokenArguments.handle_upload()
+    elif parameters['edit']:
+        editor.edit(filename=TokenArguments.get_config_path(), use_tty=True)
     else:
         sum_eth = 0
         sum_eth += sum(handle_tokens())
