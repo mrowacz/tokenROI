@@ -80,6 +80,7 @@ def handle_wallets():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.FATAL)
     argv = sys.argv[1:]
     parameters = TokenArguments.parse(argv)
     if parameters['debug']:
@@ -92,5 +93,6 @@ if __name__ == "__main__":
     else:
         sum_eth = 0
         sum_eth += sum(handle_tokens())
-        sum_eth += sum(handle_wallets())
-        print("eth sum: {0:.2f}".format(sum_eth))
+        if parameters['all']:
+            sum_eth += sum(handle_wallets())
+            print("eth sum: {0:.2f}".format(sum_eth))

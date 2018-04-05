@@ -20,16 +20,18 @@ class TokenArguments:
             "debug": False,
             "init": False,
             "upload": False,
-            "fetch": False
+            "fetch": False,
+            "all": False
         }
         help_string = """
 How to use:
---init initialize config in ${HOME}/.local/token/token_list.txt
+--init initialize config in ${HOME}/.local/token/
 --upload to google disk
+--all show all data even eth balances
 """
         try:
-            opts, args = getopt.getopt(argv, "hi:u:f:d:",
-                                       ["init", "upload", 'fetch', 'debug'])
+            opts, args = getopt.getopt(argv, "hi:u:f:d:a:",
+                                ["init", "upload", 'fetch', 'debug', 'all'])
         except getopt.GetoptError:
             print(help_string)
             sys.exit(2)
@@ -45,6 +47,8 @@ How to use:
                 out['fetch'] = True
             elif opt in ("-d", "--debug"):
                 out['debug'] = True
+            elif opt in ("-a", "--all"):
+                out['all'] = True
         return out
 
     @staticmethod
@@ -80,4 +84,12 @@ How to use:
         drive = GoogleDrive(gauth)
         file_list = drive.ListFile(
             {'q': "'root' in parents and trashed=false"}).GetList()
-        print(file_list)
+        file_list = list(filter(lambda x: x['title'] == 'token_list.txt',
+                             file_list))
+
+        # with open(TokenArguments.get_config_path(), 'r') as f:
+        #     data = ''
+        #     for s in f.readlines():
+        #         data += s
+        file_list[0].SetContentFile(TokenArguments.get_config_path())
+        file_list[0].Upload()
