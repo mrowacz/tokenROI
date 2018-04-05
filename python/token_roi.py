@@ -1,4 +1,6 @@
 import json
+import os
+
 import requests
 import sys
 import logging
@@ -80,6 +82,7 @@ def handle_wallets():
 
 
 if __name__ == "__main__":
+    os.chdir(TokenArguments.get_path())
     logging.basicConfig(level=logging.FATAL)
     argv = sys.argv[1:]
     parameters = TokenArguments.parse(argv)
