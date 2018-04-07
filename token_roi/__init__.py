@@ -81,7 +81,7 @@ def handle_wallets():
     return out
 
 
-if __name__ == "__main__":
+def main():
     os.chdir(TokenArguments.get_path())
     logging.basicConfig(level=logging.FATAL)
     argv = sys.argv[1:]

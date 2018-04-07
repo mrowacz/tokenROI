@@ -1,5 +1,5 @@
 .idea/
-python/token_roi/__pycache__/
+token_roi/__pycache__/
 venv/
 build/
 dist/

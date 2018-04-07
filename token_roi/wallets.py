@@ -1,5 +1,6 @@
 import os
 
+
 class WalletArguments:
     CONF_PATH = '/.local/token/'
     CONF_NAME = 'eth_wallets.txt'
