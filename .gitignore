@@ -4,3 +4,7 @@ venv/
 build/
 dist/
 tokenROI.egg-info/
+.pytest_cache/
+.tox/
+tests/__pycache__/
+*.pyc
