@@ -6,7 +6,8 @@ tokenROI
 About
 =====
 
-tokenROI is an tool which eaisly presents your erc20 token collection.
+tokenROI is an tool which eaisly presents your erc20 token collection
+using data from idex stock.
 It converts your token balances into ethereum and also shows current roi
 of your investments. There is possibility to store your's configuration on
 google drive.
