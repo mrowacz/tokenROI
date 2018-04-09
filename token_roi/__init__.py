@@ -1,21 +1,18 @@
 import json
-import os
 import editor
 import requests
-import sys
-import logging
-from token_roi.tokens import TokenArguments
-from token_roi.wallets import WalletArguments
+from token_roi.tokens import *
+from token_roi.arg_parser import *
 
 
 def handle_tokens():
     out = []
-    tokens = {}
-    with open(TokenArguments.get_config_path()) as f:
+    tks = {}
+    with open(token_config_path()) as f:
         conf_list = list(map(lambda x: x.rstrip(), f.readlines()))
         for c in conf_list:
             token, price, amount = c.split(" ")
-            tokens[token] = {
+            tks[token] = {
                 'price': float(price),
                 'amount': float(amount)
             }
@@ -35,15 +32,15 @@ def handle_tokens():
         "TOKEN", "ICO PRICE", "LAST", "ROI", "TOTAL"
     ) + END_SIGN)
 
-    for token in sorted(tokens):
+    for token in sorted(tks):
         key_str = "ETH_" + token
 
         if not key_str in idex_tickers or str(
                 idex_tickers[key_str]['last']) == 'N/A':
             continue
 
-        t_price = tokens[token]['price']
-        t_amount = tokens[token]['amount']
+        t_price = tks[token]['price']
+        t_amount = tks[token]['amount']
         ico_price = "{0:.8f}".format(float(t_price))
         last_price = "{0:.8f}".format(float(idex_tickers[key_str]['last']))
         total_eth = "{0:.8f}".format(t_amount * float(last_price))
@@ -65,7 +62,7 @@ def handle_tokens():
 
 def handle_wallets():
     out = []
-    with open(WalletArguments.get_config_path()) as f:
+    with open(wallet_config_path()) as f:
         wei = 1e-18
         data = f.readlines()
         url = "https://api.etherscan.io/api?module=account&action=balance" \
@@ -82,19 +79,20 @@ def handle_wallets():
 
 
 def main():
-    os.chdir(TokenArguments.get_path())
-    logging.basicConfig(level=logging.FATAL)
+    os.chdir(config_dir())
+    logger = logging.getLogger()
+    logger.setLevel(level=logging.FATAL)
     argv = sys.argv[1:]
-    parameters = TokenArguments.parse(argv)
+    parameters = parse_token_config(argv)
     if parameters['debug']:
-        logging.basicConfig(level=logging.DEBUG)
-    logging.debug("parameters " + str(parameters))
+        logger.setLevel(level=logging.DEBUG)
+        logging.debug(parameters)
     if parameters['init']:
-        TokenArguments.handle_init()
+        token_config_init()
     elif parameters['upload']:
-        TokenArguments.handle_upload()
+        token_config_upload()
     elif parameters['edit']:
-        editor.edit(filename=TokenArguments.get_config_path(), use_tty=True)
+        editor.edit(filename=token_config_path(), use_tty=True)
     else:
         sum_eth = 0
         sum_eth += sum(handle_tokens())
