@@ -3,7 +3,7 @@ import logging
 import sys
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
-from config import *
+from token_roi.config import *
 
 
 def token_config_init():
