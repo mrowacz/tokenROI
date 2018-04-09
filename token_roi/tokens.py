@@ -1,20 +1,32 @@
 import logging
-
-import sys
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from token_roi.config import *
 
 
-def token_config_init():
+def initialize_configuration():
+    create_config_dir()
+    token_config_init()
+    wallet_config_init()
+    logging.info("Configuration initialized")
+
+
+def create_config_dir():
     try:
+        logging.debug("Create dir " + config_dir())
         os.makedirs(config_dir())
-        with open(token_config_path(), 'w') as f:
-            f.write(CONF_CONTENT)
     except FileExistsError:
         logging.error(config_dir() + ' already exists')
-    print('Configuration initialized!')
-    sys.exit(0)
+
+
+def token_config_init():
+    with open(token_config_path(), 'w') as f:
+        f.write(TOKEN_CONF_CONTENT)
+
+
+def wallet_config_init():
+    with open(wallet_config_path(), 'w') as f:
+        f.write(WALLETS_CONF_CONTENT)
 
 
 def token_config_upload():

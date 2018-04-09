@@ -1,13 +1,16 @@
 import os
 
 CONF_PATH = '/.local/token/'
-CONF_TOKENS = 'token_list.txt'
-CONF_WALLETS = 'eth_wallets.txt'
-CONF_CONTENT = """
-# token_roi configuration file
+TOKEN_CONF = 'token_list.txt'
+WALLETS_CONF = 'eth_wallets.txt'
+TOKEN_CONF_CONTENT = """# token_roi tokens configuration file
 # <TOKEN ID> <YOUR ICO PRICE> <AMOUNT OF COINS>
 # for example
-# WPR 0.000125 1000
+WPR 0.000125 1000
+"""
+WALLETS_CONF_CONTENT = """# token_roi tokens configuration file
+# <YOUR ETH ADDRESS>
+0x2a0c0DBEcC7E4D658f48E01e3fA353F44050c208
 """
 
 
@@ -18,8 +21,8 @@ def config_dir():
 
 
 def token_config_path():
-    return config_dir() + CONF_TOKENS
+    return config_dir() + TOKEN_CONF
 
 
 def wallet_config_path():
-    return config_dir() + CONF_WALLETS
+    return config_dir() + WALLETS_CONF

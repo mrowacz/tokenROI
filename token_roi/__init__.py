@@ -9,7 +9,13 @@ def handle_tokens():
     out = []
     tks = {}
     with open(token_config_path()) as f:
-        conf_list = list(map(lambda x: x.rstrip(), f.readlines()))
+        conf_list = list(
+            filter(lambda  x: not x == '',
+                   filter(lambda x: '#' not in x,
+                          map(lambda x: x.rstrip(), f.readlines())
+                          )
+                   )
+        )
         for c in conf_list:
             token, price, amount = c.split(" ")
             tks[token] = {
@@ -73,26 +79,28 @@ def handle_wallets():
                 js_r = json.loads(r.text)
                 if js_r['message'] == 'OK':
                     print('{0:}: {1:.4f}'.
-                          format(addr, float(js_r['result'])*wei))
-                    out.append(float(js_r['result'])*wei)
+                          format(addr, float(js_r['result']) * wei))
+                    out.append(float(js_r['result']) * wei)
     return out
 
 
 def main():
     os.chdir(config_dir())
     logger = logging.getLogger()
-    logger.setLevel(level=logging.FATAL)
+    logger.setLevel(level=logging.INFO)
     argv = sys.argv[1:]
     parameters = parse_token_config(argv)
     if parameters['debug']:
         logger.setLevel(level=logging.DEBUG)
         logging.debug(parameters)
     if parameters['init']:
-        token_config_init()
+        initialize_configuration()
+        sys.exit(0)
     elif parameters['upload']:
         token_config_upload()
     elif parameters['edit']:
         editor.edit(filename=token_config_path(), use_tty=True)
+        editor.edit(filename=wallet_config_path(), use_tty=True)
     else:
         sum_eth = 0
         sum_eth += sum(handle_tokens())
