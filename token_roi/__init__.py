@@ -101,7 +101,6 @@ def main():
     elif parameters['edit']:
         editor.edit(filename=token_config_path(), use_tty=True)
         editor.edit(filename=wallet_config_path(), use_tty=True)
-        upload_configs()
     else:
         sum_eth = 0
         sum_eth += sum(handle_tokens())
