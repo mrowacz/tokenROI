@@ -1,6 +1,5 @@
 import sys
 import getopt
-import logging
 
 
 def parse_token_config(argv):

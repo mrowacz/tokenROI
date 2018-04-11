@@ -1,4 +1,5 @@
 import logging
+import getpass
 from token_roi.config import *
 
 
@@ -6,6 +7,7 @@ def initialize_configuration():
     create_config_dir()
     token_config_init()
     wallet_config_init()
+    create_settings()
     logging.info("Configuration initialized")
 
 
@@ -26,3 +28,8 @@ def wallet_config_init():
     with open(wallet_config_path(), 'w') as f:
         f.write(WALLETS_CONF_CONTENT)
 
+
+def create_settings():
+    username = getpass.getuser()
+    with open(setting_config_path(), 'w') as f:
+        f.write(SETTINGS.format(username, username))
