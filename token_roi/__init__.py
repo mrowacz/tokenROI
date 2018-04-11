@@ -3,7 +3,7 @@ import editor
 import requests
 from token_roi.tokens import *
 from token_roi.arg_parser import *
-
+from cloud import *
 
 def handle_tokens():
     out = []
@@ -97,10 +97,11 @@ def main():
         initialize_configuration()
         sys.exit(0)
     elif parameters['upload']:
-        token_config_upload()
+        upload_configs()
     elif parameters['edit']:
         editor.edit(filename=token_config_path(), use_tty=True)
         editor.edit(filename=wallet_config_path(), use_tty=True)
+        upload_configs()
     else:
         sum_eth = 0
         sum_eth += sum(handle_tokens())
