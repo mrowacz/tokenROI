@@ -14,9 +14,11 @@ def parse_token_config(argv):
     }
     help_string = """
 How to use:
---init initialize config in ${HOME}/.local/token/
---upload to google disk
 --all show all data even eth balances
+--init initialize config in ${HOME}/.local/token/
+--upload to dropbox
+--restore download config from dropbox
+--debug enable debug messages
 """
     try:
         opts, args = getopt.getopt(argv, "hi:u:r:d:a:e:",
