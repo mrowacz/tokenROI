@@ -9,8 +9,8 @@ def parse_token_config(argv):
         "upload": False,
         "restore": False,
         "all": False,
-        "edit": False
-
+        "edit": False,
+        "email": False
     }
     help_string = """
 How to use:
@@ -23,7 +23,7 @@ How to use:
     try:
         opts, args = getopt.getopt(argv, "hi:u:r:d:a:e:",
                                    ["init", "upload", 'restore', 'debug',
-                                    'all', 'edit'])
+                                    'all', 'edit', "email"])
     except getopt.GetoptError:
         print(help_string)
         sys.exit(2)
@@ -43,4 +43,6 @@ How to use:
             out['all'] = True
         elif opt in ("-e", "--edit"):
             out['edit'] = True
+        elif opt in ("-m", "--email"):
+            out['email'] = True
     return out

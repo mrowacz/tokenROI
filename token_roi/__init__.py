@@ -3,7 +3,9 @@ import editor
 import requests
 from token_roi.tokens import *
 from token_roi.arg_parser import *
+from token_roi.token_mailer import *
 from cloud import *
+
 
 def handle_tokens():
     out = []
@@ -33,11 +35,14 @@ def handle_tokens():
     RED_TEXT = '\x1b[1;37;40m'
     END_SIGN = '\x1b[0m'
 
+    txt = []
     header_format = "{:<10} {:<14} {:<14} {:<14} {:<14}"
-    print(HEADER_TEXT + header_format.format(
+    txt.append(header_format.format(
         "TOKEN", "ICO PRICE", "LAST", "ROI", "TOTAL"
-    ) + END_SIGN)
-
+    ))
+    print(HEADER_TEXT + txt[-1] + END_SIGN)
+    txt.append('\n')
+    
     for token in sorted(tks):
         key_str = "ETH_" + token
 
@@ -54,6 +59,12 @@ def handle_tokens():
         roi_float = 100 * (float(last_price) - t_price) / t_price
         roi = "{0:.2f}%".format(roi_float)
 
+        # append raw text
+        txt.append(
+            header_format.format(token, ico_price, last_price, roi, total_eth)
+            + '\n'
+        )
+
         if roi_float > 100:
             print(
                 GREEN_TEXT + header_format.format(token, ico_price, last_price,
@@ -63,7 +74,7 @@ def handle_tokens():
             print(RED_TEXT + header_format.format(token, ico_price, last_price,
                                                   roi, total_eth)
                   + END_SIGN)
-    return out
+    return out, txt
 
 
 def handle_wallets():
@@ -111,7 +122,12 @@ def main():
         editor.edit(filename=wallet_config_path(), use_tty=True)
     else:
         sum_eth = 0
-        sum_eth += sum(handle_tokens())
+        token_cash, txt = handle_tokens()
+        sum_eth += sum(token_cash)
+        eth_balance = '0'
         if parameters['all']:
             sum_eth += sum(handle_wallets())
-            print("eth sum: {0:.2f}".format(sum_eth))
+            eth_balance = "eth sum: {0:.2f}".format(sum_eth)
+            print(eth_balance)
+        if parameters['email']:
+            send_stats(''.join(txt) + eth_balance)
