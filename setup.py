@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "tokenROI",
-    version = "0.5.0",
+    version = "0.5.1",
     author = "Lukasz Czerwinski",
     author_email = "mrowacz@gmail.com",
     description = ("Quick ROI calculator for your token balances base on"
