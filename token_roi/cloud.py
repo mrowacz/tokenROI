@@ -1,36 +1,69 @@
+import sys
 import logging
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
 from config import *
+import dropbox
+from dropbox.files import WriteMode
+from dropbox.exceptions import ApiError, AuthError
+
+BACKUPPATH = '/TokenRoi/'
 
 
-def upload_file(gdrive, file):
+def select_revision(dropbox, file):
+    print("Finding available revisions on Dropbox...")
+    entries = dropbox.files_list_revisions(BACKUPPATH + file, limit=30).entries
+    revisions = sorted(entries, key=lambda entry: entry.server_modified)
+    return revisions[-1].rev
+
+
+def dropbox_push_file(dropbox, file):
     """
-    :type gdrive: GoogleDrive
+    :type dropbox: Dropbox
     :param file: String
     """
-    drive_list = gdrive.ListFile(
-        {'q': "'root' in parents and trashed=false"}
-    ).GetList()
-    file_list = list(filter(lambda x: x['title'] == file,
-                            drive_list))
-    fhandler = None
-    print(file_list)
-    if not file_list:
-        fhandler = gdrive.CreateFile({'id': file})
-        print('empty')
-    else:
-        fhandler = file_list[0]
+    with open(config_dir() + file, 'rb') as f:
+        logging.info("Uploading " + file + " to Dropbox as " +
+                     BACKUPPATH + "...")
+        try:
+            dropbox.files_upload(f.read(), BACKUPPATH + file,
+                                 mode=WriteMode('overwrite'))
+        except ApiError as err:
+            if (err.error.is_path() and
+                    err.error.get_path().reason.is_insufficient_space()):
+                logging.error("ERROR: Cannot back up; insufficient space.")
+            elif err.user_message_text:
+                logging.error(err.user_message_text)
+                sys.exit(-1)
+            else:
+                logging.error(err)
+                sys.exit(-1)
 
-    fhandler.SetContentFile(config_dir() + file)
-    fhandler.Upload()
+
+def dropbox_restore_file(dropbox, file, rev=None):
+    logging.info("Restoring " + BACKUPPATH + file + " to revision "
+                 + str(rev) + " on Dropbox...")
+    dropbox.files_restore(BACKUPPATH + file, rev)
+    logging.info(
+        "Downloading current " + BACKUPPATH + " from Dropbox, overwriting " +
+        config_dir() + file + "...")
+    dropbox.files_download_to_file(config_dir() + file, BACKUPPATH + file, rev)
 
 
-def upload_configs():
-    gauth = GoogleAuth()
-    gauth.LocalWebserverAuth()
-    drive = GoogleDrive(gauth)
-    logging.info("Uploading " + TOKEN_CONF)
-    upload_file(drive, TOKEN_CONF)
-    logging.info("Uploading " + WALLETS_CONF)
-    upload_file(drive, WALLETS_CONF)
+def dropbox_start():
+    TOKEN = os.getenv("DROPBOX_TOKEN")
+
+    if len(TOKEN) == 0:
+        logging.error("ERROR: Looks like you didn't add your access token. "
+                      "Open up backup-and-restore-example.py in a text editor and "
+                      "paste in your token in line 14.")
+
+    print("Creating a Dropbox object...")
+    dbx = dropbox.Dropbox(TOKEN)
+
+    # Check that the access token is valid
+    try:
+        dbx.users_get_current_account()
+    except AuthError as err:
+        logging.error("ERROR: Invalid access token; try re-generating an "
+                      "access token from the app console on the web.")
+        sys.exit(-1)
+    return dbx

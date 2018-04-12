@@ -7,7 +7,7 @@ def parse_token_config(argv):
         "debug": False,
         "init": False,
         "upload": False,
-        "fetch": False,
+        "restore": False,
         "all": False,
         "edit": False
 
@@ -19,8 +19,9 @@ How to use:
 --all show all data even eth balances
 """
     try:
-        opts, args = getopt.getopt(argv, "hi:u:f:d:a:e:",
-                                   ["init", "upload", 'fetch', 'debug', 'all', 'edit'])
+        opts, args = getopt.getopt(argv, "hi:u:r:d:a:e:",
+                                   ["init", "upload", 'restore', 'debug',
+                                    'all', 'edit'])
     except getopt.GetoptError:
         print(help_string)
         sys.exit(2)
@@ -32,8 +33,8 @@ How to use:
             out['init'] = True
         elif opt in ("-u", "--upload"):
             out['upload'] = True
-        elif opt in ("-f", "--fetch"):
-            out['fetch'] = True
+        elif opt in ("-r", "--restore"):
+            out['restore'] = True
         elif opt in ("-d", "--debug"):
             out['debug'] = True
         elif opt in ("-a", "--all"):

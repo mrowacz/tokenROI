@@ -97,7 +97,15 @@ def main():
         initialize_configuration()
         sys.exit(0)
     elif parameters['upload']:
-        upload_configs()
+        dbx = dropbox_start()
+        dropbox_push_file(dbx, TOKEN_CONF)
+        dropbox_push_file(dbx, WALLETS_CONF)
+    elif parameters['restore']:
+        dbx = dropbox_start()
+        dropbox_restore_file(dbx, TOKEN_CONF,
+                             rev=select_revision(dbx, TOKEN_CONF))
+        dropbox_restore_file(dbx, WALLETS_CONF,
+                             rev=select_revision(dbx, WALLETS_CONF))
     elif parameters['edit']:
         editor.edit(filename=token_config_path(), use_tty=True)
         editor.edit(filename=wallet_config_path(), use_tty=True)
