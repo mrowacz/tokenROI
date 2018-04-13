@@ -2,7 +2,7 @@ import sys
 import getopt
 
 
-def parse_token_config(argv):
+def parse_argv(argv):
     out = {
         "debug": False,
         "init": False,
@@ -19,6 +19,7 @@ How to use:
 --upload to dropbox
 --restore download config from dropbox
 --debug enable debug messages
+--email sent mail with summary
 """
     try:
         opts, args = getopt.getopt(argv, "hi:u:r:d:a:e:",

@@ -96,17 +96,23 @@ def handle_wallets():
 
 
 def main():
-    os.chdir(config_dir())
     logger = logging.getLogger()
     logger.setLevel(level=logging.INFO)
     argv = sys.argv[1:]
-    parameters = parse_token_config(argv)
+    parameters = parse_argv(argv)
+    if parameters['init']:
+        logging.info("Initializing token_roi")
+        initialize_configuration()
+        sys.exit(0)
+    try:
+        os.chdir(config_dir())
+    except FileNotFoundError:
+        logging.error("Can't switch cwd to ~/.local/token. Did you "
+                      "initialized token_roi?")
+        exit(-1)
     if parameters['debug']:
         logger.setLevel(level=logging.DEBUG)
         logging.debug(parameters)
-    if parameters['init']:
-        initialize_configuration()
-        sys.exit(0)
     elif parameters['upload']:
         dbx = dropbox_start()
         dropbox_push_file(dbx, TOKEN_CONF)

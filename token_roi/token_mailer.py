@@ -2,6 +2,7 @@ import json
 import smtplib
 from token_roi.config import *
 
+
 def sendemail(from_addr, to_addr_list,
               subject, message,
               login, password,
@@ -20,7 +21,7 @@ def sendemail(from_addr, to_addr_list,
 
 
 def send_stats(message):
-    conf  = json.load(open(config_dir() + "email.json", 'r'))
+    conf = json.load(open(config_dir() + EMAIL_CONF, 'r'))
     sendemail(from_addr=conf['user'],
               to_addr_list=conf['to'],
               subject='token_roi',

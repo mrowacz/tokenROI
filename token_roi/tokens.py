@@ -1,13 +1,12 @@
 import logging
-import getpass
 from token_roi.config import *
 
 
 def initialize_configuration():
     create_config_dir()
-    token_config_init()
-    wallet_config_init()
-    create_settings()
+    init_config(token_config_path(), TOKEN_CONF_CONTENT)
+    init_config(wallet_config_path(), WALLETS_CONF_CONTENT)
+    init_config(config_dir() + EMAIL_CONF, EMAIL_CONF_CONTENT)
     logging.info("Configuration initialized")
 
 
@@ -19,17 +18,6 @@ def create_config_dir():
         logging.error(config_dir() + ' already exists')
 
 
-def token_config_init():
-    with open(token_config_path(), 'w') as f:
-        f.write(TOKEN_CONF_CONTENT)
-
-
-def wallet_config_init():
-    with open(wallet_config_path(), 'w') as f:
-        f.write(WALLETS_CONF_CONTENT)
-
-
-def create_settings():
-    username = getpass.getuser()
-    with open(setting_config_path(), 'w') as f:
-        f.write(SETTINGS.format(username, username))
+def init_config(file, content):
+    with open(file, 'w') as f:
+        f.write(content)
