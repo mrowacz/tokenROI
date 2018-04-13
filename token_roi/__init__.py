@@ -4,11 +4,10 @@ import requests
 from token_roi.tokens import *
 from token_roi.arg_parser import *
 from token_roi.token_mailer import *
-from cloud import *
+from token_roi.cloud_storage import *
 
 
 def handle_tokens():
-    out = []
     tks = {}
     with open(token_config_path()) as f:
         conf_list = list(
