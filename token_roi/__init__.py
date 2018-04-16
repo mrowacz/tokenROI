@@ -41,7 +41,8 @@ def handle_tokens():
     ))
     print(HEADER_TEXT + txt[-1] + END_SIGN)
     txt.append('\n')
-    
+
+    row_balance = []
     for token in sorted(tks):
         key_str = "ETH_" + token
 
@@ -54,7 +55,7 @@ def handle_tokens():
         ico_price = "{0:.8f}".format(float(t_price))
         last_price = "{0:.8f}".format(float(idex_tickers[key_str]['last']))
         total_eth = "{0:.8f}".format(t_amount * float(last_price))
-        out.append(float(total_eth))
+        row_balance.append(float(total_eth))
         roi_float = 100 * (float(last_price) - t_price) / t_price
         roi = "{0:.2f}%".format(roi_float)
 
@@ -73,7 +74,7 @@ def handle_tokens():
             print(RED_TEXT + header_format.format(token, ico_price, last_price,
                                                   roi, total_eth)
                   + END_SIGN)
-    return out, txt
+    return row_balance, txt
 
 
 def handle_wallets():
