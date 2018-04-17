@@ -3,6 +3,7 @@ import os
 CONF_PATH = '/.local/token/'
 TOKEN_CONF = 'token_list.txt'
 WALLETS_CONF = 'eth_wallets.txt'
+DROPBOX_CONF = 'dropbox.txt'
 EMAIL_CONF = 'email.json'
 TOKEN_CONF_CONTENT = """# token_roi tokens configuration file
 # <TOKEN ID> <YOUR ICO PRICE> <AMOUNT OF COINS>
@@ -35,3 +36,7 @@ def token_config_path():
 
 def wallet_config_path():
     return config_dir() + WALLETS_CONF
+
+
+def dropbox_config_path():
+    return config_dir() + DROPBOX_CONF

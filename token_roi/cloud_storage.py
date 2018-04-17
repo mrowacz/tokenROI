@@ -49,15 +49,17 @@ def dropbox_restore_file(dropbox, file, rev=None):
 
 
 def dropbox_start():
-    TOKEN = os.getenv("DROPBOX_TOKEN")
+    token = None
+    with open(dropbox_config_path(), 'r') as f:
+        token = f.readline().rstrip()
 
-    if len(TOKEN) == 0:
+    if len(token) == 0:
         logging.error("ERROR: Looks like you didn't add your access token. "
                       "Open up backup-and-restore-example.py in a text editor and "
                       "paste in your token in line 14.")
 
     print("Creating a Dropbox object...")
-    dbx = dropbox.Dropbox(TOKEN)
+    dbx = dropbox.Dropbox(token)
 
     # Check that the access token is valid
     try:
