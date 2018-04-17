@@ -1,6 +1,6 @@
 import sys
 import logging
-from config import *
+from token_roi.config import *
 import dropbox
 from dropbox.files import WriteMode
 from dropbox.exceptions import ApiError, AuthError
