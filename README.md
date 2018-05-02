@@ -1,7 +1,7 @@
 tokenROI
 ========
-:Info: Console ethereum erc20 token portfolio.<br>
-:Author: Lukasz Czerwinski <mrowacz@gmail.com>
+Info: Console ethereum erc20 token portfolio.<br>
+Author: Lukasz Czerwinski <mrowacz@gmail.com>
 
 About
 =====
@@ -18,11 +18,33 @@ download the project source and do::
 ```
   $ python setup.py install
 ```
+
+Quick Start
+============
+Working token roi calculator needs list of erc20 tokens and your ethereum wallets.
+Calculator allows easily edit configuration with:
+```
+$ token_roi --edit
+```
+It opens your system editor and starts edition of token_list.txt and
+eth_wallets.txt. Config construction is easy and shouldn't make a problems.
+
 Examples
 ========
 Here's a basic usage examples
 ```
 $ token_roi
 ```
-console output for example should gives<br>
-![tokenroi_basic_example](https://user-images.githubusercontent.com/11421787/38460421-a2b09c78-3ab9-11e8-88f3-d132d834b48d.png)
+console output should gives<br>
+![screenshot from 2018-05-02 22-54-47_2](https://user-images.githubusercontent.com/11421787/39549323-be20f950-4e5d-11e8-8d3e-5122eec3e50b.png)
+It shows only your ethereum erc20 token's balances. Showing with overall ethereum wallets
+posession is made with:
+```
+$ token_roi --all
+```
+console output should gives<br>
+![screenshot from 2018-05-02 22-54-47](https://user-images.githubusercontent.com/11421787/39549080-d9820492-4e5c-11e8-8bbd-a1d0873fda5b.png)
+
+Contact
+=======
+All complains and suggestions sent through github issue system

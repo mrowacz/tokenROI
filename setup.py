@@ -9,7 +9,7 @@ with io.open(readme_filename, encoding='utf-8') as readme_file:
 
 setup(
     name = "tokenROI",
-    version = "0.6.7",
+    version = "0.6.8",
     author = "Lukasz Czerwinski",
     author_email = "mrowacz@gmail.com",
     url = "https://github.com/mrowacz/tokenROI",
